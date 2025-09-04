@@ -90,14 +90,16 @@
   // Style/action functions
   function styleImage(img) {
     try {
-      // add your desired class (safer than replacing className)
-      img.classList.add('blur'); // if the site uses 'blur' class to censor
-
-      // also apply inline fallbacks in case class is overwritten
-      img.style.setProperty('filter', 'none', 'important');
-      img.style.setProperty('background', '#F003', 'important');
-      // mark as styled for debugging
-      img.dataset._gm_styled = '1';
+      // only proceed if the img already has the 'blur' class
+      if (img.classList.contains('blur')) {
+        // add your desired class (safer than replacing className)
+        img.classList.add('blurbegone'); // archive.org uses 'blur' class to censor
+        // also apply inline fallbacks in case class is overwritten
+        img.style.setProperty('filter', 'none', 'important');
+        img.style.setProperty('background', '#F003', 'important');
+        // mark as styled for debugging
+        img.dataset._gm_styled = '1';
+      }
     } catch (e) {
       // ignore
     }
@@ -262,4 +264,3 @@
   console.info('shadow-styler: loaded (press Alt+Shift+S to toggle)');
 
 })();
-
