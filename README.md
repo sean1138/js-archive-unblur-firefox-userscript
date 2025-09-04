@@ -6,7 +6,7 @@ Firefox Greasemonkey userscript for removing the preview blur in titles marked i
 * also uses a `MutationObserver` to react fast to new content
 * safely walks nested **open** shadow roots by selector chains you already built
 * avoids replacing other classes (uses `classList.add`) and uses `style.setProperty(..., 'important')` where helpful
-* has a keyboard toggle (Alt+Shift+S) and console logging for debugging
+* has a keyboard toggle (Ctrl+Alt+Shift+S) and console logging for debugging
 * is easy to tweak: adjust selector chains, styles, interval
 
 # Credits
