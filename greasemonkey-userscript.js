@@ -61,6 +61,29 @@
     "text-overlay"       // final target: overlay element (we will remove or hide)
   ];
 
+  // search pages
+  const imageSelectorsSP = [
+    "app-root",
+    "search-page",
+    "collection-browser",
+    "infinite-scroller",
+    "tile-dispatcher",
+    "item-tile",
+    "image-block",
+    "item-image",
+    "img"                // final target: the <img> element (we will add class, style)
+  ];
+  const overlaySelectorsSP = [
+    "app-root",
+    "search-page",
+    "collection-browser",
+    "infinite-scroller",
+    "tile-dispatcher",
+    "item-tile",
+    "image-block",
+    "text-overlay"       // final target: overlay element (we will remove or hide)
+  ];
+
   // How often (ms) to force-check everything as a fallback. Lower = more aggressive.
   let CHECK_INTERVAL_MS = 1000;
 
@@ -72,6 +95,7 @@
 
       // also apply inline fallbacks in case class is overwritten
       img.style.setProperty('filter', 'none', 'important');
+      img.style.setProperty('background', '#F003', 'important');
       // mark as styled for debugging
       img.dataset._gm_styled = '1';
     } catch (e) {
@@ -144,6 +168,12 @@
         // if you need to filter (only jpg/png) you can check src or dataset here
         styleImage(img);
       }
+      // search page
+      const imgsSP = deepQueryAll(document, imageSelectorsSP);
+      for (const img of imgsSP) {
+        // if you need to filter (only jpg/png) you can check src or dataset here
+        styleImage(img);
+      }
 
       // Grab overlays and remove/hide them
       const overlays = deepQueryAll(document, overlaySelectors);
@@ -153,6 +183,11 @@
       // user profile
       const overlaysU = deepQueryAll(document, overlaySelectorsU);
       for (const ov of overlaysU) {
+        styleOverlay(ov);
+      }
+      // search page
+      const overlaysSP = deepQueryAll(document, overlaySelectorsSP);
+      for (const ov of overlaysSP) {
         styleOverlay(ov);
       }
     } catch (err) {
