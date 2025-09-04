@@ -165,10 +165,10 @@
   }, CHECK_INTERVAL_MS);
 
   /***************************************************************************
-   * Toggle via keyboard: Alt+Shift+S to enable/disable
+   * Toggle via keyboard: Ctrl+Alt+Shift+S to enable/disable
    ***************************************************************************/
   window.addEventListener('keydown', (ev) => {
-    if (ev.altKey && ev.shiftKey && ev.code === 'KeyS') {
+    if (ev.ctrlKey && ev.altKey && ev.shiftKey && ev.code === 'KeyS') {
       enabled = !enabled;
       console.info('shadow-styler: enabled =', enabled);
       if (enabled) {
