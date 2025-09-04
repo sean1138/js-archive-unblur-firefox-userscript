@@ -12,7 +12,7 @@ Firefox Greasemonkey userscript for removing the preview blur in titles marked i
 # Credits
 ChatGPT adapted the content.js code from [RefomerAgent's Archive-Unblur Chrome extension](https://github.com/ReformerAgent/Archive-Unblur) to work with the mess of javascript i was working on to do the same thing.  My js was failing to persist the unblurring (from infinite scrolling pages) before showing chatjibidy the content.js code from ReformerAgent.
 
-# install
+# Install
 1, Copy code from greasemonkey-userscript.js into a greasemonkey script.
 2, enjoy.
 
