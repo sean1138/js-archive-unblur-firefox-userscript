@@ -15,6 +15,7 @@
    ***************************************************************************/
   // Chains of selectors — each array element is a selector at the next depth.
   // The final selector in imageSelectors should match the <img> node itself (so we get the image elements).
+  // general browsing collections
   const imageSelectors = [
     "app-root",
     "collection-page",
@@ -26,10 +27,32 @@
     "item-image",
     "img"                // final target: the <img> element (we will add class, style)
   ];
-
   const overlaySelectors = [
     "app-root",
     "collection-page",
+    "collection-browser",
+    "infinite-scroller",
+    "tile-dispatcher",
+    "item-tile",
+    "image-block",
+    "text-overlay"       // final target: overlay element (we will remove or hide)
+  ];
+
+  // user uplaods
+  const imageSelectorsU = [
+    "app-root",
+    "user-profile",
+    "collection-browser",
+    "infinite-scroller",
+    "tile-dispatcher",
+    "item-tile",
+    "image-block",
+    "item-image",
+    "img"                // final target: the <img> element (we will add class, style)
+  ];
+  const overlaySelectorsU = [
+    "app-root",
+    "user-profile",
     "collection-browser",
     "infinite-scroller",
     "tile-dispatcher",
@@ -115,10 +138,21 @@
         // if you need to filter (only jpg/png) you can check src or dataset here
         styleImage(img);
       }
+      // user profile
+      const imgsU = deepQueryAll(document, imageSelectorsU);
+      for (const img of imgsU) {
+        // if you need to filter (only jpg/png) you can check src or dataset here
+        styleImage(img);
+      }
 
       // Grab overlays and remove/hide them
       const overlays = deepQueryAll(document, overlaySelectors);
       for (const ov of overlays) {
+        styleOverlay(ov);
+      }
+      // user profile
+      const overlaysU = deepQueryAll(document, overlaySelectorsU);
+      for (const ov of overlaysU) {
         styleOverlay(ov);
       }
     } catch (err) {
