@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         target Shadow DOM .blur Image
+// @name         archive.org uncensored
 // @namespace    https://vsxd.com/userscripts
 // @version      1.0
 // @description  Apply custom CSS to an <img class="blur"> nested inside shadow roots, chatgpt adapted from https://github.com/ReformerAgent/Archive-Unblur/blob/main/content.js
