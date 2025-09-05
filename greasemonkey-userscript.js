@@ -261,6 +261,6 @@
     clearInterval(intervalId);
   });
 
-  console.info('shadow-styler: loaded (press Alt+Shift+S to toggle)');
+  console.info('shadow-styler: loaded (press Crtl+Alt+Shift+S to toggle)');
 
 })();
