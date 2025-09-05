@@ -15,74 +15,47 @@
    ***************************************************************************/
   // Chains of selectors — each array element is a selector at the next depth.
   // The final selector in imageSelectors should match the <img> node itself (so we get the image elements).
-  // general browsing collections
-  const imageSelectors = [
+  const baseImageSelectors = [
     "app-root",
-    "collection-page",
+    "__PAGE_TYPE__", // placeholder string
     "collection-browser",
     "infinite-scroller",
     "tile-dispatcher",
     "item-tile",
     "image-block",
     "item-image",
-    "img"                // final target: the <img> element (we will add class, style)
-  ];
-  const overlaySelectors = [
-    "app-root",
-    "collection-page",
-    "collection-browser",
-    "infinite-scroller",
-    "tile-dispatcher",
-    "item-tile",
-    "image-block",
-    "text-overlay"       // final target: overlay element (we will remove or hide)
+    "img"
   ];
 
-  // user uplaods
-  const imageSelectorsU = [
+  const pageVariants = {
+    standard: "collection-page",
+    user: "user-profile",
+    search: "search-page"
+  };
+
+  function buildSelectors(pageType) {
+    return baseImageSelectors.map(sel =>
+      sel === "__PAGE_TYPE__" ? pageVariants[pageType] : sel
+    );
+  }
+
+  const baseOverlaySelectors = [
     "app-root",
-    "user-profile",
+    "__PAGE_TYPE__", // placeholder string
     "collection-browser",
     "infinite-scroller",
     "tile-dispatcher",
     "item-tile",
     "image-block",
-    "item-image",
-    "img"                // final target: the <img> element (we will add class, style)
-  ];
-  const overlaySelectorsU = [
-    "app-root",
-    "user-profile",
-    "collection-browser",
-    "infinite-scroller",
-    "tile-dispatcher",
-    "item-tile",
-    "image-block",
-    "text-overlay"       // final target: overlay element (we will remove or hide)
+    "text-overlay" // final target: overlay element (we will remove or hide)
   ];
 
-  // search pages
-  const imageSelectorsSP = [
-    "app-root",
-    "search-page",
-    "collection-browser",
-    "infinite-scroller",
-    "tile-dispatcher",
-    "item-tile",
-    "image-block",
-    "item-image",
-    "img"                // final target: the <img> element (we will add class, style)
-  ];
-  const overlaySelectorsSP = [
-    "app-root",
-    "search-page",
-    "collection-browser",
-    "infinite-scroller",
-    "tile-dispatcher",
-    "item-tile",
-    "image-block",
-    "text-overlay"       // final target: overlay element (we will remove or hide)
-  ];
+  function buildSelectorsOv(pageType) {
+    return baseOverlaySelectors.map(sel =>
+      sel === "__PAGE_TYPE__" ? pageVariants[pageType] : sel
+    );
+  }
+  // xxxxxxxxxxxxxx
 
   // How often (ms) to force-check everything as a fallback. Lower = more aggressive.
   let CHECK_INTERVAL_MS = 1000;
@@ -98,7 +71,7 @@
         img.style.setProperty('filter', 'none', 'important');
         img.style.setProperty('background', '#F003', 'important');
         // mark as styled for debugging
-        img.dataset._gm_styled = '1';
+        img.dataset.gm_styled = '1';
       }
     } catch (e) {
       // ignore
@@ -109,15 +82,50 @@
     try {
       // remove if you want it gone:
       if (el.parentNode) {
-        el.parentNode.removeChild(el);
-      } else {
+      //   el.parentNode.removeChild(el);
+      // } else {
         // fallback: hide with important flag
         el.style.setProperty('display', 'none', 'important');
+        // mark as styled for debugging
+        el.dataset.gm_styled = '1';
       }
     } catch (e) {
       // ignore
     }
   }
+
+  // Unstyle/disable functions
+  function unstyleAll() {
+    try {
+      for (const type of ["standard", "user", "search"]) {
+        // --- undo for images ---
+        const imgs = deepQueryAll(
+          document,
+          buildSelectors(type).slice(0, -1).concat('[data-gm_styled="1"]')
+        );
+        for (const img of imgs) {
+          img.style.setProperty('filter', '', 'important');
+          img.style.setProperty('background', '', 'important');
+          img.classList.remove('blurbegone');
+          delete img.dataset.gm_styled;
+        }
+
+        // --- undo for overlays ---
+        const overlays = deepQueryAll(
+          document,
+          buildSelectorsOv(type).slice(0, -1).concat('[data-gm_overlay="1"]')
+        );
+        for (const ov of overlays) {
+          ov.style.setProperty('display', '', 'important');
+          ov.style.setProperty('visibility', '', 'important');
+          delete ov.dataset.gm_overlay;
+        }
+      }
+    } catch (err) {
+      console.error('shadow-styler: unstyleAll error', err);
+    }
+  }
+
 
   /***************************************************************************
    * Helper: recursively walk nested shadow roots and return final matched nodes
@@ -159,39 +167,14 @@
 
     try {
       // Grab all image <img> elements via the deep selector chain
-      const imgs = deepQueryAll(document, imageSelectors);
-      for (const img of imgs) {
-        // if you need to filter (only jpg/png) you can check src or dataset here
-        styleImage(img);
-      }
-      // user profile
-      const imgsU = deepQueryAll(document, imageSelectorsU);
-      for (const img of imgsU) {
-        // if you need to filter (only jpg/png) you can check src or dataset here
-        styleImage(img);
-      }
-      // search page
-      const imgsSP = deepQueryAll(document, imageSelectorsSP);
-      for (const img of imgsSP) {
-        // if you need to filter (only jpg/png) you can check src or dataset here
-        styleImage(img);
+      for (const type of ["standard", "user", "search"]) {
+        const imgs = deepQueryAll(document, buildSelectors(type));
+        for (const img of imgs) styleImage(img);
+        // Grab overlays and remove/hide them
+        const overlays = deepQueryAll(document, buildSelectorsOv(type));
+        for (const ov of overlays) styleOverlay(ov);
       }
 
-      // Grab overlays and remove/hide them
-      const overlays = deepQueryAll(document, overlaySelectors);
-      for (const ov of overlays) {
-        styleOverlay(ov);
-      }
-      // user profile
-      const overlaysU = deepQueryAll(document, overlaySelectorsU);
-      for (const ov of overlaysU) {
-        styleOverlay(ov);
-      }
-      // search page
-      const overlaysSP = deepQueryAll(document, overlaySelectorsSP);
-      for (const ov of overlaysSP) {
-        styleOverlay(ov);
-      }
     } catch (err) {
       console.error('shadow-styler: checkAndModifyElements error', err);
     }
@@ -244,6 +227,8 @@
       console.info('shadow-styler: enabled =', enabled);
       if (enabled) {
         checkAndModifyElements();
+      } else {
+        unstyleAll();
       }
     }
   });
