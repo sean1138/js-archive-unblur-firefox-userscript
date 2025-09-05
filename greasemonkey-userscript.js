@@ -24,7 +24,7 @@
     "item-tile",
     "image-block",
     "item-image",
-    "img"
+    "img" // final target: the <img> element (we will add class, style)
   ];
 
   const pageVariants = {
@@ -55,7 +55,6 @@
       sel === "__PAGE_TYPE__" ? pageVariants[pageType] : sel
     );
   }
-  // xxxxxxxxxxxxxx
 
   // How often (ms) to force-check everything as a fallback. Lower = more aggressive.
   let CHECK_INTERVAL_MS = 1000;
@@ -80,8 +79,9 @@
 
   function styleOverlay(el) {
     try {
-      // remove if you want it gone:
+
       if (el.parentNode) {
+      // remove if you want it gone:
       //   el.parentNode.removeChild(el);
       // } else {
         // fallback: hide with important flag
@@ -113,7 +113,7 @@
         // --- undo for overlays ---
         const overlays = deepQueryAll(
           document,
-          buildSelectorsOv(type).slice(0, -1).concat('[data-gm_overlay="1"]')
+          buildSelectorsOv(type).slice(0, -1).concat('[data-gm_styled="1"]')
         );
         for (const ov of overlays) {
           ov.style.setProperty('display', '', 'important');
